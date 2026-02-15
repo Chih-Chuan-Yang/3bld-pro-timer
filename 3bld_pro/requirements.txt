@@ -5,3 +5,5 @@ requests
 plotly
 joblib
 scikit-learn
+google-generativeai
+python-dotenv
