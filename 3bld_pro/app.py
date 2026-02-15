@@ -27,7 +27,7 @@ except ImportError as e:
     st.stop()
 
 # --- 1. 頁面基礎設定 ---
-st.set_page_config(page_title="3BLD Pro", page_icon="🧩", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="3BLD Pro", page_icon="🔥", layout="wide", initial_sidebar_state="expanded")
 
 # --- 2. 初始化 Session State ---
 if 'timer_state' not in st.session_state: st.session_state.timer_state = 'IDLE' 
