@@ -1,0 +1,128 @@
+{
+  "UBL": {
+    "pair": "UBL",
+    "alg": "F R U' R' U' R U R' F' R U R' U' R' F R F'",
+    "seq": "F R U' R' U' R U R' F' R U R' U' R' F R F'",
+    "moves": 17
+  },
+  "UBR": {
+    "pair": "UBR",
+    "alg": "R U R' F' R U R' U' R' F R2 U' R' U'",
+    "seq": "R U R' F' R U R' U' R' F R2 U' R' U'",
+    "moves": 14
+  },
+  "UFL": {
+    "pair": "UFL",
+    "alg": "U' R U R' F' R U R' U' R' F R2 U' R'",
+    "seq": "U' R U R' F' R U R' U' R' F R2 U' R'",
+    "moves": 14
+  },
+  "FUL": {
+    "pair": "FUL",
+    "alg": "r B' U2 R2 F R F' R U2 r' U L U L'",
+    "seq": "r B' U2 R2 F R F' R U2 r' U L U L'",
+    "moves": 14
+  },
+  "FDR": {
+    "pair": "FDR",
+    "alg": "U R U' R U R' F' R U R' U' R' F R2 U' R2 U'",
+    "seq": "U R U' R U R' F' R U R' U' R' F R2 U' R2 U'",
+    "moves": 17
+  },
+  "FDL": {
+    "pair": "FDL",
+    "alg": "y' U' R' F R2 U' R' U' R U R' F' R U R'",
+    "seq": "y' U' R' F R2 U' R' U' R U R' F' R U R'",
+    "moves": 15
+  },
+  "RBU": {
+    "pair": "RBU",
+    "alg": "R U R' U R U2 R2 F' R U R' U' R' F R2 U' R' U2 R",
+    "seq": "R U R' U R U2 R2 F' R U R' U' R' F R2 U' R' U2 R",
+    "moves": 19
+  },
+  "RDB": {
+    "pair": "RDB",
+    "alg": "R U D R' F' R U R' U' R' F R2 U' R' U' R D' R'",
+    "seq": "R U D R' F' R U R' U' R' F R2 U' R' U' R D' R'",
+    "moves": 18
+  },
+  "RDF": {
+    "pair": "RDF",
+    "alg": "U2 R' F R2 U' R' U' R U R' F' R U R' U",
+    "seq": "U2 R' F R2 U' R' U' R U R' F' R U R' U",
+    "moves": 15
+  },
+  "BUR": {
+    "pair": "BUR",
+    "alg": "U R U' R' U2 L R U' R' U L' U",
+    "seq": "U R U' R' U2 L R U' R' U L' U",
+    "moves": 12
+  },
+  "BUL": {
+    "pair": "BUL",
+    "alg": "U' R' U' R U R' F' R U R' U' R' F R2",
+    "seq": "U' R' U' R U R' F' R U R' U' R' F R2",
+    "moves": 14
+  },
+  "BDL": {
+    "pair": "BDL",
+    "alg": "U' R' D' R U R' U' D R D' R D R' U R' D' R D R",
+    "seq": "U' R' D' R U R' U' D R D' R D R' U R' D' R D R",
+    "moves": 19
+  },
+  "BDR": {
+    "pair": "BDR",
+    "alg": "U2D' R' F R2 U' R' U' R U R' F' R U R' U D",
+    "seq": "U2D' R' F R2 U' R' U' R U R' F' R U R' U D",
+    "moves": 16
+  },
+  "LUB": {
+    "pair": "LUB",
+    "alg": "U R' U' R U R' F' R U R' U' R' F R2 U2",
+    "seq": "U R' U' R U R' F' R U R' U' R' F R2 U2",
+    "moves": 15
+  },
+  "LFU": {
+    "pair": "LFU",
+    "alg": "U2 R' U L' U' LR U2 L' U' L",
+    "seq": "U2 R' U L' U' LR U2 L' U' L",
+    "moves": 10
+  },
+  "LDF": {
+    "pair": "LDF",
+    "alg": "U D R U' R U R' F' R U R' U' R' F R2 U' R2 U' D'",
+    "seq": "U D R U' R U R' F' R U R' U' R' F R2 U' R2 U' D'",
+    "moves": 19
+  },
+  "LBD": {
+    "pair": "LBD",
+    "alg": "R U D' R' F' R U R' U' R' F R2 U' R' U' R D R'",
+    "seq": "R U D' R' F' R U R' U' R' F R2 U' R' U' R D R'",
+    "moves": 18
+  },
+  "DFL": {
+    "pair": "DFL",
+    "alg": "U' x U2 R2 F R F' R U2 r' U L U",
+    "seq": "U' x U2 R2 F R F' R U2 r' U L U",
+    "moves": 13
+  },
+  "DFR": {
+    "pair": "DFR",
+    "alg": "U D R2 U' R2 U R2 D' R2 U R2 U' R2 U2",
+    "seq": "U D R2 U' R2 U R2 D' R2 U R2 U' R2 U2",
+    "moves": 14
+  },
+  "DBR": {
+    "pair": "DBR",
+    "alg": "U R2 U' R U R' F' R U R' U' R' F R2 U' R U'",
+    "seq": "U R2 U' R U R' F' R U R' U' R' F R2 U' R U'",
+    "moves": 17
+  },
+  "DBL": {
+    "pair": "DBL",
+    "alg": "U D' R2 U' R U R' F' R U R' U' R' F R2 U' R U' D",
+    "seq": "U D' R2 U' R U R' F' R U R' U' R' F R2 U' R U' D",
+    "moves": 19
+  }
+}

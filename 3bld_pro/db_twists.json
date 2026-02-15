@@ -1,0 +1,86 @@
+{
+  "FUL": {
+    "pair": "FUL (逆)",
+    "alg": "R' D R D' R' D R U' R' D' R D R' D' R U",
+    "seq": "R' D R D' R' D R U' R' D' R D R' D' R U",
+    "moves": 16
+  },
+  "FDR": {
+    "pair": "FDR (逆)",
+    "alg": "U R' U' R U R' D' R U' R' U R U' R' D R",
+    "seq": "U R' U' R U R' D' R U' R' U R U' R' D R",
+    "moves": 16
+  },
+  "FDL": {
+    "pair": "FDL (順)",
+    "alg": "R' D R U R' U' R U R' D' R U' R' U R U'",
+    "seq": "R' D R U R' U' R U R' D' R U' R' U R U'",
+    "moves": 16
+  },
+  "RBU": {
+    "pair": "RBU (順)",
+    "alg": "U R' D R D' R' D R U' R' D' R D R' D' R",
+    "seq": "U R' D R D' R' D R U' R' D' R D R' D' R",
+    "moves": 16
+  },
+  "RDB": {
+    "pair": "RDB (逆)",
+    "alg": "R U R' D' R U' R' U R U' R' D R U R' U'",
+    "seq": "R U R' D' R U' R' U R U' R' D R U R' U'",
+    "moves": 16
+  },
+  "RDF": {
+    "pair": "RDF (順)",
+    "alg": "R' D' R U R' U' R U R' D R U' R' U R U'",
+    "seq": "R' D' R U R' U' R U R' D R U' R' U R U'",
+    "moves": 16
+  },
+  "BUR": {
+    "pair": "BUR (逆)",
+    "alg": "R' D R D' R' D R U R' D' R D R' D' R U'",
+    "seq": "R' D R D' R' D R U R' D' R D R' D' R U'",
+    "moves": 16
+  },
+  "BUL": {
+    "pair": "BUL (順)",
+    "alg": "U2 R' D R D' R' D R U2 R' D' R D R' D' R",
+    "seq": "U2 R' D R D' R' D R U2 R' D' R D R' D' R",
+    "moves": 16
+  },
+  "BDL": {
+    "pair": "BDL (逆)",
+    "alg": "R U' R' U R D' R' U' R U R' U' R D R' U",
+    "seq": "R U' R' U R D' R' U' R U R' U' R D R' U",
+    "moves": 16
+  },
+  "BDR": {
+    "pair": "BDR (順)",
+    "alg": "U R U' R' D' R U R' U' R U R' D R U' R'",
+    "seq": "U R U' R' D' R U R' U' R U R' D R U' R'",
+    "moves": 16
+  },
+  "LUB": {
+    "pair": "LUB (逆)",
+    "alg": "R' D R D' R' D R U2 R' D' R D R' D' R U2",
+    "seq": "R' D R D' R' D R U2 R' D' R D R' D' R U2",
+    "moves": 16
+  },
+  "LFU": {
+    "pair": "LFU (順)",
+    "alg": "U' R' D R D' R' D R U R' D' R D R' D' R",
+    "seq": "U' R' D R D' R' D R U R' D' R D R' D' R",
+    "moves": 16
+  },
+  "LDF": {
+    "pair": "LDF (逆)",
+    "alg": "U R' U' R U R' D R U' R' U R U' R' D' R",
+    "seq": "U R' U' R U R' D R U' R' U R U' R' D' R",
+    "moves": 16
+  },
+  "LBD": {
+    "pair": "LBD (順)",
+    "alg": "U' R D' R' U R U' R' U R D R' U' R U R'",
+    "seq": "U' R D' R' U R U' R' U R D R' U' R U R'",
+    "moves": 16
+  }
+}
