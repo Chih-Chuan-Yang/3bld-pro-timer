@@ -27,7 +27,7 @@ except ImportError as e:
     st.stop()
 
 # --- 1. 頁面基礎設定 ---
-st.set_page_config(page_title="3BLD Pro", page_icon="🧩", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="3BLD Pro", page_icon="🔥", layout="wide", initial_sidebar_state="expanded")
 
 # --- 2. 初始化 Session State ---
 if 'timer_state' not in st.session_state: st.session_state.timer_state = 'IDLE' 
@@ -45,53 +45,89 @@ if 'pro_db_manager' not in st.session_state: st.session_state.pro_db_manager = P
 if 'scheme_manager' not in st.session_state: st.session_state.scheme_manager = SchemeManager()
 if 'wca_service' not in st.session_state: st.session_state.wca_service = WCAService()
 
-# --- 3. 全域介面 CSS ---
+# --- 3. 全域介面 CSS (Cyberpunk 風格) ---
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&family=Russo+One&display=swap');
     
-    .stApp { background-color: #fafafa; }
+    /* 全域背景設定 - 深色電競風 */
+    .stApp {
+        background-color: #0E1117;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+        color: #FFFFFF;
+    }
     
-    /* 按鈕樣式 */
+    /* 標題發光特效 */
+    h1, h2, h3 {
+        color: #FFFFFF;
+        text-shadow: 0 0 10px rgba(0, 255, 163, 0.3);
+        font-family: 'Russo One', sans-serif !important;
+    }
+    
+    /* 按鈕樣式 - 霓虹漸層 */
     div.stButton > button { 
         width: 100%; border-radius: 12px; font-family: 'JetBrains Mono'; font-weight: bold; 
-        font-size: 20px; border: 2px solid #e0e0e0; background-color: white; 
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: auto; min-height: 60px; transition: 0.3s; 
+        font-size: 18px; border: none; 
+        background: linear-gradient(45deg, #2b5876 0%, #4e4376 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3); height: auto; min-height: 50px; transition: 0.3s; 
     }
     div.stButton > button:hover { 
-        transform: translateY(-3px); box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2); 
-        border-color: #6c5ce7; color: #6c5ce7; z-index: 100; 
+        transform: translateY(-2px); 
+        box-shadow: 0 6px 20px rgba(78, 67, 118, 0.6); 
+        color: #00FFA3;
+    }
+    /* 主要按鈕 (Primary) */
+    div.stButton > button[kind="primary"] {
+        background: linear-gradient(45deg, #FF0099, #493240);
+        box-shadow: 0 4px 15px rgba(255, 0, 153, 0.4);
     }
 
-    /* 打亂區塊 */
+    /* 打亂區塊 - 任務代碼風 */
     .scramble-box { 
-        background-color: white; padding: 25px; border-radius: 12px; text-align: center; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05); font-family: 'JetBrains Mono', font-size: 24px; 
-        color: #333; margin-bottom: 15px; border: 1px solid #eee; 
+        background-color: #1A1C24; padding: 25px; border-radius: 12px; text-align: center; 
+        box-shadow: 0 0 20px rgba(0, 255, 163, 0.1); 
+        font-family: 'JetBrains Mono', monospace; font-size: 26px; 
+        color: #00FFA3; margin-bottom: 20px; border: 1px dashed #333; 
+        letter-spacing: 1px;
     }
 
     /* AI 推理區塊 */
     .reasoning-box {
-        background-color: #f0f7ff; border-left: 5px solid #00d2ff; padding: 20px;
+        background-color: #16213e; border-left: 5px solid #00d2ff; padding: 20px;
         border-radius: 8px; margin-top: 15px; font-family: 'Inter', sans-serif;
-        line-height: 1.6; color: #2c3e50;
+        line-height: 1.6; color: #e0e0e0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
     /* 編碼格 */
     .cube-face-container { 
         padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: center; 
-        background-color: white; border: 1px solid #eee; 
+        background-color: #222; border: 1px solid #444; 
     }
+    .face-label { color: #aaa; font-weight: bold; margin-bottom: 5px; }
     div[data-testid="stTextInput"] input { 
         text-align: center !important; font-weight: 800 !important; font-size: 18px !important; 
+        background-color: #333; color: white; border: 1px solid #555;
     }
+
+    /* 數據卡片風格 */
+    div[data-testid="metric-container"] {
+        background-color: #1A1C24;
+        border: 1px solid #333;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid #FF0099;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+    div[data-testid="metric-container"] label { color: #aaa; }
+    div[data-testid="metric-container"] div[data-testid="stMetricValue"] { color: #fff; }
 
     /* 手機優化 */
     @media (max-width: 768px) {
-        div.stButton > button { min-height: 70px; font-size: 22px; margin-bottom: 10px; }
-        .js-plotly-plot { margin-left: -20px !important; margin-right: -20px !important; }
-        .player-card::before { display: none; }
-        .info h2 { font-size: 24px !important; word-wrap: break-word; }
+        div.stButton > button { min-height: 60px; font-size: 20px; margin-bottom: 10px; }
+        .scramble-box { font-size: 20px; padding: 15px; }
+        .js-plotly-plot { margin-left: -10px !important; margin-right: -10px !important; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -159,7 +195,7 @@ with st.sidebar:
 # 主畫面邏輯
 # ==========================================
 
-# --- 模式 1：戰力卡 ---
+# --- 模式 1：戰力卡 (RPG 風格升級版) ---
 if mode == "🏆 戰力卡":
     st.markdown("## 🆔 選手戰力分析")
     col1, col2 = st.columns([3, 1])
@@ -195,11 +231,31 @@ if mode == "🏆 戰力卡":
                                   f'<span class="badge bronze">🥉 {m["bronze"]}</span>' if m['bronze']>0 else ""])
             if not medals_html: medals_html = '<span class="badge normal">參賽選手</span>'
 
+            # 判斷等級 (RGB Style)
+            try:
+                # 這裡簡單判斷，實際可根據項目調整
+                s_time_str = stats['single_time']
+                if ':' in s_time_str: s_val = 999 
+                else: s_val = float(s_time_str)
+            except: s_val = 999
+
+            if s_val < 20: 
+                rank_title = "🔥 S 級大師 (Grandmaster)"
+                rank_color = "#FF0000"
+                glow_color = "rgba(255, 0, 0, 0.5)"
+            elif s_val < 40:
+                rank_title = "💎 A 級鑽石 (Diamond)"
+                rank_color = "#00FFFF"
+                glow_color = "rgba(0, 255, 255, 0.5)"
+            else:
+                rank_title = "🛡️ B 級戰士 (Warrior)"
+                rank_color = "#AAAAAA"
+                glow_color = "rgba(170, 170, 170, 0.5)"
+
             # MBLD 處理
             is_mbld = (selected_event == '333mbf')
             grid_style = "grid-template-columns: 1fr; max-width: 600px; margin: 20px auto;" if is_mbld else "grid-template-columns: 1fr 1fr;"
             
-            # 🔥 關鍵修正：確保 HTML 字符串沒有多餘縮排
             avg_box_html = "" if is_mbld else textwrap.dedent(f"""
                 <div class="stat-box">
                     <div class="stat-label">Best Average</div>
@@ -214,30 +270,43 @@ if mode == "🏆 戰力卡":
             card_html = textwrap.dedent(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@400;700&display=swap');
-.player-card {{ background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); border-radius: 24px; padding: 30px; color: white; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); font-family: 'Roboto', sans-serif; position: relative; overflow: hidden; }}
+.player-card {{ 
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); 
+    border-radius: 24px; padding: 30px; color: white; 
+    box-shadow: 0 0 30px {glow_color}; 
+    border: 2px solid {rank_color}; 
+    font-family: 'Roboto', sans-serif; position: relative; overflow: hidden; 
+}}
 .header-flex {{ display: flex; align-items: center; margin-bottom: 25px; }}
 .avatar {{ width: 110px; height: 110px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 0 20px rgba(79,172,254,0.6); object-fit: cover; margin-right: 25px; }}
-.info h2 {{ margin: 0; font-size: 32px; font-weight: 700; color: #fff; font-family: 'Russo One', sans-serif; }}
+.info h2 {{ margin: 0; font-size: 32px; font-weight: 700; color: #fff; font-family: 'Russo One', sans-serif; text-shadow: 0 0 10px rgba(255,255,255,0.5); }}
 .badge {{ padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-right: 5px; background: rgba(255,255,255,0.1); }}
 .gold {{ background: linear-gradient(45deg, #FFD700, #FDB931); color: #333; }}
 .silver {{ background: linear-gradient(45deg, #E0E0E0, #BDBDBD); color: #333; }}
 .bronze {{ background: linear-gradient(45deg, #CD7F32, #A0522D); color: #fff; }}
 .normal {{ background: rgba(255,255,255,0.15); color: #ddd; }}
 .stats-grid {{ display: grid; {grid_style} gap: 20px; margin-top: 20px; }}
-.stat-box {{ background: rgba(255,255,255,0.05); padding: 20px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }}
-.stat-box:hover {{ background: rgba(255,255,255,0.1); transform: translateY(-5px); border-color: #4facfe; }}
-.stat-val {{ font-size: 36px; font-weight: 700; font-family: 'Russo One', sans-serif; color: #fff; }}
-.stat-label {{ font-size: 13px; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }}
+.stat-box {{ background: rgba(0,0,0,0.3); padding: 20px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }}
+.stat-box:hover {{ background: rgba(255,255,255,0.1); transform: translateY(-5px); border-color: #4facfe; box-shadow: 0 0 15px rgba(79,172,254,0.4); }}
+.stat-val {{ font-size: 36px; font-weight: 700; font-family: 'Russo One', sans-serif; color: #00FFA3; text-shadow: 0 0 10px rgba(0,255,163,0.5); }}
+.stat-label {{ font-size: 13px; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; color: #ccc; }}
 .rank-row {{ display: flex; justify-content: center; gap: 10px; margin-top: 8px; font-size: 13px; }}
 .rank-tag {{ background: #ff416c; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; }}
 .rank-world {{ background: #3a3f55; color: #ccc; padding: 2px 8px; border-radius: 4px; }}
+.rank-badge {{ 
+    position: absolute; top: 20px; right: 20px; 
+    background: {rank_color}; color: #000; padding: 5px 15px; 
+    font-weight: bold; border-radius: 20px; box-shadow: 0 0 10px {rank_color};
+    transform: rotate(5deg);
+}}
 </style>
 <div class="player-card">
+<div class="rank-badge">{rank_title}</div>
 <div class="header-flex">
 <img class="avatar" src="{p['avatar_url']}">
 <div class="info">
 <h2>{p['name']}</h2>
-<p>{p['country']} | {p['wca_id']}</p>
+<p style="color: #aaa;">{p['country']} | <span style="font-family: monospace;">{p['wca_id']}</span></p>
 <div class="badge-row"><span class="badge">📅 {p['competition_count']} 場比賽</span>{medals_html}</div>
 </div>
 </div>
@@ -280,7 +349,7 @@ if mode == "🏆 戰力卡":
                 get_time_score('333oh', 6.20), get_time_score('555', 32.88),
                 min(int((p['competition_count'] / 50) * 100), 100)
             ]
-            cats = ['速解力 (Speed)', '盲解力 (Blind)', '單手力 (OH)', '高階力 (Big Cube)', '經驗值 (Exp)']
+            cats = ['速解力', '盲解力', '單手力', '高階力', '經驗值']
             vals.append(vals[0]); cats.append(cats[0])
 
             fig = go.Figure()
@@ -289,8 +358,9 @@ if mode == "🏆 戰力卡":
                 line=dict(color='#00d2ff'), fillcolor='rgba(0, 210, 255, 0.2)', marker=dict(size=8, color='#00d2ff')
             ))
             fig.update_layout(
-                polar=dict(radialaxis=dict(visible=True, range=[0, 100]), bgcolor='rgba(0,0,0,0)'),
-                paper_bgcolor='rgba(0,0,0,0)', margin=dict(l=40, r=40, t=20, b=20), showlegend=False, height=400
+                polar=dict(radialaxis=dict(visible=True, range=[0, 100], gridcolor='#444'), bgcolor='rgba(0,0,0,0)'),
+                paper_bgcolor='rgba(0,0,0,0)', margin=dict(l=40, r=40, t=20, b=20), showlegend=False, height=400,
+                font=dict(color='white')
             )
             st.plotly_chart(fig, use_container_width=True)
         else: st.warning("無成績資料")
@@ -306,7 +376,7 @@ elif mode == "⚙️ 編碼設定":
             for i in range(3): cols[i].text_input("", value=current[face_name].get(keys[i], ""), key=f"{face_name}_{keys[i]}", label_visibility="collapsed")
             cols = st.columns(3)
             cols[0].text_input("", value=current[face_name].get(keys[3], ""), key=f"{face_name}_{keys[3]}", label_visibility="collapsed")
-            cols[1].markdown(f"<div style='height:42px; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:24px;'>{face_name}</div>", unsafe_allow_html=True)
+            cols[1].markdown(f"<div style='height:42px; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:24px; color:#fff;'>{face_name}</div>", unsafe_allow_html=True)
             cols[2].text_input("", value=current[face_name].get(keys[5], ""), key=f"{face_name}_{keys[5]}", label_visibility="collapsed")
             cols = st.columns(3)
             for i in range(3): cols[i].text_input("", value=current[face_name].get(keys[6+i], ""), key=f"{face_name}_{keys[6+i]}", label_visibility="collapsed")
@@ -339,10 +409,10 @@ else:
         st.markdown("---")
         col_left, col_right = st.columns([1, 1])
         with col_left:
-            st.markdown(f"<div class='detail-code'>{u_code}</div>", unsafe_allow_html=True)
-            st.markdown(f"<div class='detail-sub'>原始位置: {pair_data['pair_code']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<h2 style='color:#00FFA3;'>{u_code}</h2>", unsafe_allow_html=True)
+            st.markdown(f"<div>原始位置: {pair_data['pair_code']}</div>", unsafe_allow_html=True)
             st.markdown("#### 📝 公式")
-            st.markdown(f"<div class='alg-box'>{pair_data['alg']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='scramble-box' style='font-size:18px;'>{pair_data['alg']}</div>", unsafe_allow_html=True)
             safe_alg = urllib.parse.quote(pair_data['alg'])
             url = f"https://alg.cubing.net/?alg={safe_alg}&type=alg&view=playback"
             components.iframe(url, height=300)
@@ -355,7 +425,7 @@ else:
             st.caption("我的 Letter Pairs")
             pro_words = st.session_state.pro_db_manager.get_words(u_code)
             if pro_words:
-                for w in pro_words: st.markdown(f"<span class='word-tag'>{w}</span>", unsafe_allow_html=True)
+                for w in pro_words: st.markdown(f"<span style='background:#333; padding:5px 10px; border-radius:5px; margin:5px; display:inline-block;'>{w}</span>", unsafe_allow_html=True)
     else:
         if st.session_state.timer_state != 'RUNNING':
             st.markdown(f'<div class="scramble-box">{st.session_state.current_scramble}</div>', unsafe_allow_html=True)
@@ -386,7 +456,8 @@ else:
             except Exception as e: st.error(f"解算器錯誤: {e}")
 
             c1, c2 = st.columns([4, 1])
-            with c1: st.info(f"{ai_text} | 難度: {score_val:.2f}")
+            with c1: 
+                st.metric(label="預測時間", value=ai_text.split("**")[1] if "**" in ai_text else "--", delta=f"難度: {score_val:.2f}")
             with c2: 
                 if st.button("📋 分析", use_container_width=True): 
                     st.session_state.show_analysis = not st.session_state.show_analysis
@@ -434,8 +505,8 @@ else:
                             if st.button(f"{uc}", key=f"{title}_{idx}"):
                                 st.session_state.selected_pair_detail = {"user_code": uc, "pair_code": item['pair'], "alg": item['alg']}
                                 st.rerun()
-                render_btn_group("🟦 Edges", "#1565C0", e_res.get('details', []))
-                render_btn_group("🟧 Corners", "#E65100", c_res.get('details', []))
+                render_btn_group("🟦 Edges", "#42A5F5", e_res.get('details', []))
+                render_btn_group("🟧 Corners", "#FFA726", c_res.get('details', []))
 
         # 🔥 修正處：這裡把 f-string 拿掉，改用普通字串，避免 JavaScript 大括號衝突
         timer_html = """
@@ -444,9 +515,9 @@ else:
         <head>
         <style>
             body { margin: 0; padding: 0; background-color: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; }
-            #timer { font-size: 160px; font-weight: 700; color: #2d3436; text-shadow: 4px 4px 0px #eee; line-height: 1.1; cursor: pointer; user-select: none; }
-            .idle { color: #2d3436; } .holding { color: #d63031; } .ready { color: #00b894; } .running { color: #2d3436; }
-            #info { font-size: 16px; color: #aaa; margin-top: 5px; font-family: sans-serif; }
+            #timer { font-size: 160px; font-weight: 700; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2); line-height: 1.1; cursor: pointer; user-select: none; }
+            .idle { color: #fff; } .holding { color: #ff0055; text-shadow: 0 0 20px #ff0055; } .ready { color: #00ff99; text-shadow: 0 0 20px #00ff99; } .running { color: #fff; }
+            #info { font-size: 16px; color: #888; margin-top: 5px; font-family: sans-serif; }
         </style>
         </head>
         <body>
