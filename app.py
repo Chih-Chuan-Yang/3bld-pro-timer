@@ -37,7 +37,7 @@ if 'current_session' not in st.session_state: st.session_state.current_session =
 if 'show_analysis' not in st.session_state: st.session_state.show_analysis = False
 if 'last_solve_result' not in st.session_state: st.session_state.last_solve_result = None
 if 'selected_pair_detail' not in st.session_state: st.session_state.selected_pair_detail = None
-if 'ai_reasoning' not in st.session_state: st.session_state.ai_reasoning = ""
+if 'ai_word_suggestion' not in st.session_state: st.session_state.ai_word_suggestion = "" # 改名：專門存字詞聯想
 if 'gemini_key' not in st.session_state: st.session_state.gemini_key = ""
 
 # 實例化管理器
@@ -45,7 +45,7 @@ if 'pro_db_manager' not in st.session_state: st.session_state.pro_db_manager = P
 if 'scheme_manager' not in st.session_state: st.session_state.scheme_manager = SchemeManager()
 if 'wca_service' not in st.session_state: st.session_state.wca_service = WCAService()
 
-# --- 3. 全域介面 CSS (Cyberpunk 風格) ---
+# --- 3. 全域介面 CSS (Cyberpunk 風格 + 特殊狀況標籤) ---
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&family=Russo+One&display=swap');
@@ -92,11 +92,20 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* AI 推理區塊 */
-    .reasoning-box {
-        background-color: #16213e; border-left: 5px solid #00d2ff; padding: 20px;
-        border-radius: 8px; margin-top: 15px; font-family: 'Inter', sans-serif;
-        line-height: 1.6; color: #e0e0e0;
+    /* 特殊狀況標籤 (Parity/Flip/Twist) - 新增樣式 */
+    .special-tag {
+        display: inline-block; padding: 8px 16px; border-radius: 6px; 
+        font-weight: bold; margin-right: 12px; margin-bottom: 10px; font-size: 16px;
+        font-family: 'Inter', sans-serif;
+    }
+    .tag-parity { background: rgba(255, 0, 85, 0.2); border: 1px solid #FF0055; color: #FF0055; box-shadow: 0 0 10px rgba(255,0,85,0.2); }
+    .tag-flip { background: rgba(0, 210, 255, 0.2); border: 1px solid #00D2FF; color: #00D2FF; }
+    .tag-twist { background: rgba(255, 170, 0, 0.2); border: 1px solid #FFAA00; color: #FFAA00; }
+
+    /* AI 建議區塊 */
+    .ai-suggestion-box {
+        background-color: #1a1c24; border-left: 4px solid #9b59b6; padding: 15px;
+        border-radius: 6px; margin-top: 10px; font-size: 15px; line-height: 1.5; color: #e0e0e0;
         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
@@ -128,6 +137,8 @@ st.markdown("""
         div.stButton > button { min-height: 60px; font-size: 20px; margin-bottom: 10px; }
         .scramble-box { font-size: 20px; padding: 15px; }
         .js-plotly-plot { margin-left: -10px !important; margin-right: -10px !important; }
+        .player-card::before { display: none; }
+        .info h2 { font-size: 24px !important; word-wrap: break-word; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -156,10 +167,10 @@ with st.sidebar:
     st.divider()
     
     # --- 🤖 AI 設定 (安全輸入) ---
-    with st.expander("🤖 AI 教練設定 (Gemini)", expanded=True):
+    with st.expander("🤖 AI 助手設定 (Gemini)", expanded=True):
         api_key_input = st.text_input("Gemini API Key", type="password", 
                                       value=st.session_state.gemini_key,
-                                      placeholder="在此貼上您的 Key...")
+                                      placeholder="貼上 Key 以啟用編碼聯想...")
         if api_key_input:
             st.session_state.gemini_key = api_key_input
             
@@ -195,7 +206,7 @@ with st.sidebar:
 # 主畫面邏輯
 # ==========================================
 
-# --- 模式 1：戰力卡 (RPG 風格升級版) ---
+# --- 模式 1：戰力卡 (RPG 風格升級版 - 完整保留) ---
 if mode == "🏆 戰力卡":
     st.markdown("## 🆔 選手戰力分析")
     col1, col2 = st.columns([3, 1])
@@ -365,7 +376,7 @@ if mode == "🏆 戰力卡":
             st.plotly_chart(fig, use_container_width=True)
         else: st.warning("無成績資料")
 
-# --- 模式 2：編碼設定 ---
+# --- 模式 2：編碼設定 (完整保留) ---
 elif mode == "⚙️ 編碼設定":
     st.markdown("## ⚙️ 記憶編碼自定義")
     with st.form("scheme_form"):
@@ -400,12 +411,17 @@ elif mode == "⚙️ 編碼設定":
             st.success("編碼已更新！")
             st.rerun()
 
-# --- 模式 3：練習數據 (預設) ---
+# --- 模式 3：練習數據 (重點修正區：詳細頁 AI + 首頁顯示特殊狀況) ---
 else:
+    # === 詳細頁面 (在此加入 AI 聯想) ===
     if st.session_state.selected_pair_detail:
         pair_data = st.session_state.selected_pair_detail
         u_code = pair_data['user_code']
-        if st.button("⬅️ 返回"): st.session_state.selected_pair_detail = None; st.rerun()
+        if st.button("⬅️ 返回"): 
+            st.session_state.selected_pair_detail = None
+            st.session_state.ai_word_suggestion = None # 清除 AI 建議
+            st.rerun()
+            
         st.markdown("---")
         col_left, col_right = st.columns([1, 1])
         with col_left:
@@ -416,16 +432,50 @@ else:
             safe_alg = urllib.parse.quote(pair_data['alg'])
             url = f"https://alg.cubing.net/?alg={safe_alg}&type=alg&view=playback"
             components.iframe(url, height=300)
+            
         with col_right:
             st.markdown("#### 🧠 記憶輔助")
-            new_word_input = st.text_input("手動新增", label_visibility="collapsed", placeholder="輸入新詞彙...")
-            if st.button("➕ 新增"):
-                if st.session_state.pro_db_manager.add_word(u_code, new_word_input):
-                    st.toast(f"已加入：{new_word_input}", icon="✅"); st.rerun()
+            # 手動新增
+            c1, c2 = st.columns([3, 1])
+            with c1: new_word_input = st.text_input("手動新增", label_visibility="collapsed", placeholder="輸入新詞彙...")
+            with c2:
+                if st.button("➕ 新增"):
+                    if st.session_state.pro_db_manager.add_word(u_code, new_word_input):
+                        st.toast(f"已加入：{new_word_input}", icon="✅"); st.rerun()
+            
+            # 顯示現有詞彙
             st.caption("我的 Letter Pairs")
             pro_words = st.session_state.pro_db_manager.get_words(u_code)
             if pro_words:
                 for w in pro_words: st.markdown(f"<span style='background:#333; padding:5px 10px; border-radius:5px; margin:5px; display:inline-block;'>{w}</span>", unsafe_allow_html=True)
+
+            st.divider()
+
+            # 🔥 AI 聯想功能 (移到這裡！)
+            st.markdown("#### 🤖 AI 靈感助手")
+            if st.button("✨ 幫我想像 (Ask Gemini)", type="primary"):
+                if not st.session_state.gemini_key:
+                    st.error("請先在側邊欄輸入 API Key")
+                else:
+                    with st.spinner("AI 正在腦力激盪..."):
+                        try:
+                            genai.configure(api_key=st.session_state.gemini_key)
+                            model = genai.GenerativeModel('gemini-pro')
+                            # 針對 Letter Pair 的 Prompt
+                            prompt = f"""
+                            我正在練習魔術方塊盲解，需要記憶一組編碼：【{u_code}】。
+                            請給我 3 個具體的、強烈的、適合轉換成圖像的中文詞彙或短語。
+                            請考慮諧音、形狀或常見聯想。
+                            請直接列出詞彙，不要廢話。
+                            """
+                            response = model.generate_content(prompt)
+                            st.session_state.ai_word_suggestion = response.text
+                        except Exception as e: st.error(f"AI 連線失敗: {e}")
+
+            if st.session_state.get('ai_word_suggestion'):
+                st.markdown(f"<div class='ai-suggestion-box'>{st.session_state.ai_word_suggestion}</div>", unsafe_allow_html=True)
+
+    # === 主畫面 (首頁) ===
     else:
         if st.session_state.timer_state != 'RUNNING':
             st.markdown(f'<div class="scramble-box">{st.session_state.current_scramble}</div>', unsafe_allow_html=True)
@@ -461,42 +511,42 @@ else:
             with c2: 
                 if st.button("📋 分析", use_container_width=True): 
                     st.session_state.show_analysis = not st.session_state.show_analysis
-                    st.session_state.ai_reasoning = ""
+                    st.session_state.ai_word_suggestion = "" # 重置詳細頁的 AI
 
-            # --- 🔥 AI 解題思路 ---
+            # --- 🔥 分析結果顯示區 (修正版：移除 AI 故事，加回特殊狀況) ---
             if st.session_state.show_analysis and solver_result:
-                st.markdown("### 🧠 AI 盲解教練")
-                edge_path = " -> ".join([f"{x['pair']}" for x in solver_result.edge_result.get('details', [])])
-                corner_path = " -> ".join([f"{x['pair']}" for x in solver_result.corner_result.get('details', [])])
+                st.markdown("### 🧠 解題思路")
                 
-                if st.button("✨ 生成解題思路 (Gemini)", type="primary"):
-                    if not st.session_state.gemini_key:
-                        st.warning("⚠️ 請在側邊欄輸入 API Key")
-                    else:
-                        with st.spinner("AI 正在思考最佳記憶路徑..."):
-                            try:
-                                genai.configure(api_key=st.session_state.gemini_key)
-                                model = genai.GenerativeModel('gemini-pro')
-                                prompt = f"""
-                                你是一位專業的魔術方塊盲解教練。
-                                這是這把打亂的編碼路徑：
-                                邊塊 (Edges): {edge_path}
-                                角塊 (Corners): {corner_path}
-                                請用繁體中文，提供一個「生動的記憶聯想故事」串聯這些編碼，並指出這把的易錯點（如 Parity 或 Flip）。
-                                """
-                                response = model.generate_content(prompt)
-                                st.session_state.ai_reasoning = response.text
-                            except Exception as e: st.error(f"AI 錯誤: {e}")
+                # 1. 顯示特殊狀況 (Parity / Flips / Twists) - 這是你要找回來的！
+                special_html = ""
+                
+                # Parity
+                if solver_result.has_parity:
+                    special_html += "<span class='special-tag tag-parity'>⚠️ Parity (交換)</span>"
+                
+                # Flips
+                flips = solver_result.edge_result.get('flips', [])
+                for f in flips:
+                    special_html += f"<span class='special-tag tag-flip'>🔄 Edge Flip: {f['part']}</span>"
 
-                if st.session_state.ai_reasoning:
-                    st.markdown(f"<div class='reasoning-box'>{st.session_state.ai_reasoning}</div>", unsafe_allow_html=True)
+                # Twists
+                twists = solver_result.corner_result.get('twists', [])
+                for t in twists:
+                    special_html += f"<span class='special-tag tag-twist'>🌀 Corner Twist: {t['part']} ({t['dir']})</span>"
+                
+                if special_html:
+                    st.markdown(f"<div style='margin-bottom:15px;'>{special_html}</div>", unsafe_allow_html=True)
+                else:
+                    st.caption("無特殊狀況 (No Specials)")
                 
                 st.divider()
+
+                # 2. 顯示編碼按鈕 (Path)
                 e_res = solver_result.edge_result
                 c_res = solver_result.corner_result
                 def render_btn_group(title, color, items):
                     if not items: return
-                    st.markdown(f'<div style="color:{color}; font-weight:bold; margin:10px 0;">{title}</div>', unsafe_allow_html=True)
+                    st.markdown(f'<div style="color:{color}; font-weight:bold; margin:10px 0;">{title} ({len(items)})</div>', unsafe_allow_html=True)
                     cols = st.columns(4)
                     for idx, item in enumerate(items):
                         if item.get('is_parity') or item.get('is_pseudo'): continue
@@ -508,7 +558,7 @@ else:
                 render_btn_group("🟦 Edges", "#42A5F5", e_res.get('details', []))
                 render_btn_group("🟧 Corners", "#FFA726", c_res.get('details', []))
 
-        # 🔥 修正處：這裡把 f-string 拿掉，改用普通字串，避免 JavaScript 大括號衝突
+        # 🔥 計時器 HTML (完整保留)
         timer_html = """
         <!DOCTYPE html>
         <html>
@@ -582,6 +632,6 @@ else:
                         st.session_state.current_scramble = generate_scramble()
                         st.session_state.show_analysis = False
                         st.session_state.temp_result = None
-                        st.session_state.ai_reasoning = ""
+                        st.session_state.ai_word_suggestion = ""
                         st.session_state.selected_pair_detail = None
                         st.rerun()
