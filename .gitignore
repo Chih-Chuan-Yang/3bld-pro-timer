@@ -1,0 +1,25 @@
+# --- 1. 資安 (絕對不能上傳) ---
+.env
+.env.local
+.streamlit/secrets.toml
+
+# --- 2. Python 自動產生的垃圾檔 ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- 3. 虛擬環境 (別人不需要你的安裝包) ---
+venv/
+.venv/
+env/
+
+# --- 4. 作業系統產生的檔案 (Mac/Windows) ---
+.DS_Store
+Thumbs.db
+
+# --- 5. 專案產生的資料 (看你想不想備份) ---
+# 如果你的 .pkl 模型很大，建議忽略，不然 git 會變慢
+# *.pkl
+
+# 如果你的 csv 只是測試用的，也可以忽略
+# *.csv
