@@ -47,6 +47,9 @@ class WCAService:
 
         # --- 2. 處理最少步數 (333fm) ---
         if event_id == "333fm":
+            # WCA 的 FMC 單次是整數 (如 39)，但平均會乘以 100 (如 4333 代表 43.33步)
+            if result > 1000:
+                return f"{result / 100:.2f}"
             return str(result)
 
         # --- 3. 處理一般計時項目 (轉為 分:秒.厘) ---
